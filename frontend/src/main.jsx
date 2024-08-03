@@ -5,14 +5,17 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
 import { SocketContextProvider } from "./context/SocketContext.jsx";
+import { SideBarContextProvider } from "./context/SideBarContent.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<AuthContextProvider>
-				<SocketContextProvider>
-					<App />
-				</SocketContextProvider>
+				<SideBarContextProvider>
+					<SocketContextProvider>
+						<App />
+					</SocketContextProvider>
+				</SideBarContextProvider>
 			</AuthContextProvider>
 		</BrowserRouter>
 	</React.StrictMode>

@@ -4,9 +4,11 @@ import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 import { TiMessages } from "react-icons/ti";
 import { useAuthContext } from "../../context/AuthContext";
+import { useSideBarContext } from "../../context/SideBarContent";
 
 const MessageContainer = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
+	const {sidebarOpen} = useSideBarContext()
 
 	useEffect(() => {
 		// cleanup function (unmounts)
@@ -14,7 +16,7 @@ const MessageContainer = () => {
 	}, [setSelectedConversation]);
 
 	return (
-		<div className='md:min-w-[450px] flex flex-col'>
+		<div className={`${sidebarOpen ? 'hidden' : ''} md:min-w-[450px] flex flex-col max-h-[550px] overflow-auto`}>
 			{!selectedConversation ? (
 				<NoChatSelected />
 			) : (
