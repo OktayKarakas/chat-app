@@ -14,10 +14,11 @@ const useListenMessages = () => {
         newMessage.shouldShake = true;
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
+      const sound = new Audio(notificationSound);
+	sound.play();
     };
 
-	const sound = new Audio(notificationSound);
-	sound.play();
+	
 
     if (socket) {
       socket.on("newMessage", handleMessage);
