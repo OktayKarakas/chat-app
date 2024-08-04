@@ -1,10 +1,12 @@
 import { useSocketContext } from "../../context/SocketContext";
 import useConversation from "../../zustand/useConversation";
 import { useSideBarContext } from "../../context/SideBarContent";
+import useRemoveConversation from "../../hooks/useRemoveConverstaion";
 
 const Conversation = ({ conversation, lastIdx, emoji }) => {
 	const {setSidebarOpen} = useSideBarContext()
 	const { selectedConversation, setSelectedConversation } = useConversation();
+	const { loading, removeConversation } = useRemoveConversation();
 
 	const isSelected = selectedConversation?._id === conversation._id;
 	const { onlineUsers } = useSocketContext();
@@ -36,6 +38,8 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 			</div>
 
 			{!lastIdx && <div className='divider my-0 py-0 h-1' />}
+			<button onClick={() => removeConversation(conversation._id)} className="bg-red-500 w-full text-white">Clear Chat</button>
+			{loading ? <span className='loading loading-spinner mx-auto'></span> : null}
 		</>
 	);
 };

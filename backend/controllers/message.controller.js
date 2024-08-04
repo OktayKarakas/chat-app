@@ -48,6 +48,40 @@ export const sendMessage = async (req, res) => {
 	}
 };
 
+export const removeConversation = async (req, res) => {
+	try {
+		const { id: receiverId } = req.params;
+		const senderId = req.user._id;
+
+		// Find the conversation between the sender and receiver
+		const conversation = await Conversation.findOneAndDelete({
+			participants: { $all: [senderId, receiverId] },
+		});
+
+		if (!conversation) {
+			return res.status(404).json({ error: "Conversation not found" });
+		}
+
+		// Optionally, you could also remove the messages associated with this conversation
+		// if you're storing messages separately and want to clean them up
+		await Message.deleteMany({ _id: { $in: conversation.messages } });
+
+		// SOCKET IO FUNCTIONALITY WILL GO HERE (if needed)
+		const receiverSocketId = getReceiverSocketId(receiverId);
+		if (receiverSocketId) {
+			io.to(receiverSocketId).emit("conversationRemoved", {
+				conversationId: conversation._id,
+			});
+		}
+
+		res.status(200).json({ message: "Conversation removed successfully" });
+	} catch (error) {
+		console.log("Error in removeConversation controller: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+
 export const getMessages = async (req, res) => {
 	try {
 		const { id: userToChatId } = req.params;
